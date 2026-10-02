@@ -17,7 +17,6 @@ function input(partial: Partial<DetectInput>): DetectInput {
     lockfiles: partial.lockfiles ?? new Set(),
   };
 }
-
 describe('parseMajor', () => {
   it('reads the major from common range forms', () => {
     expect(parseMajor('^19.0.0')).toBe(19);
@@ -30,7 +29,6 @@ describe('parseMajor', () => {
     expect(parseMajor('latest')).toBeUndefined();
   });
 });
-
 describe('detect framework', () => {
   it('detects next from the dependency', () => {
     expect(detect(input({ pkg: { dependencies: { next: '15.0.0' } } })).framework).toBe(
@@ -53,20 +51,14 @@ describe('detect framework', () => {
     );
   });
   it('prefers next over vite when both are present', () => {
-    
     expect(detect(input({ pkg: { dependencies: { next: '15', vite: '5' } } })).framework).toBe(
       Framework.NEXT,
     );
   });
-    it('detects a Vinext app as Vite even though Vinext depends on Next for its API', () => {
-    expect(
-      detect(
-        input({
-          pkg: { dependencies: { next: '15', vinext: '0.5', vite: '5' } },
-          configFiles: new Set(['vite.config.ts']),
-        }),
-      ).framework,
-    ).toBe(Framework.VITE);
+  it('detects a Vinext app as Vite even though it declares Next for API compatibility', () => {
+    expect(detect(input({ pkg: { dependencies: { next: '15', vinext: '0.5' } } })).framework).toBe(
+      Framework.VITE,
+    );
   });
   it('detects SvelteKit from the @sveltejs/kit dep (even though it ships vite)', () => {
     expect(
@@ -112,7 +104,6 @@ describe('detect framework', () => {
     ).toBe(Framework.SVELTEKIT);
   });
 });
-
 describe('detect source mapping need', () => {
   it('flags React 19 as needing source mapping', () => {
     const d = detect(input({ pkg: { dependencies: { react: '^19.0.0', vite: '5' } } }));

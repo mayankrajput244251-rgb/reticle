@@ -254,13 +254,13 @@ interface FrameworkSignals {
   /** `package.json` dependency names that name this framework outright. */
   readonly deps: readonly string[];
   /**
- * Dependencies that disprove this framework's dependency signal, without affecting an explicit
- * config-file signal.
- *
- * Vinext carries `next` for API compatibility but builds through Vite, so treating `next` as
- * conclusive there would install wiring that Vinext never evaluates.
- */
-readonly depsUnless?: readonly string[];
+   * Dependencies that disprove this framework's dependency signal, without affecting an explicit
+   * config-file signal.
+   *
+   * Vinext carries `next` for API compatibility but builds through Vite, so treating `next` as
+   * conclusive there would install wiring that Vinext never evaluates.
+   */
+  readonly depsUnless?: readonly string[];
   /** Root config-file basenames that name it when the dependency is absent. */
   readonly configs: readonly string[];
   /**
@@ -459,7 +459,7 @@ function declaredDependencies(pkg: PackageJsonLike): Readonly<Record<string, str
 function detectFramework(input: DetectInput): Framework {
   for (const framework of DETECTION_ORDER) {
     const signals = FRAMEWORK_SIGNALS[framework];
-        const hasDisqualifyingDependency =
+    const hasDisqualifyingDependency =
       true === signals.depsUnless?.some((d) => depVersion(input.pkg, d) !== undefined);
     if (
       signals.deps.some((d) => depVersion(input.pkg, d) !== undefined) &&
