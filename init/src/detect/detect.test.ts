@@ -56,9 +56,19 @@ describe('detect framework', () => {
     );
   });
   it('detects a Vinext app as Vite even though it declares Next for API compatibility', () => {
-    expect(detect(input({ pkg: { dependencies: { next: '15', vinext: '0.5' } } })).framework).toBe(
-      Framework.VITE,
-    );
+    expect(
+      detect(input({ pkg: { dependencies: { next: '15', vinext: '0.5', vite: '5' } } })).framework,
+    ).toBe(Framework.VITE);
+  });
+  it('keeps an explicit Next config as a Next signal when Vinext is also declared', () => {
+    expect(
+      detect(
+        input({
+          pkg: { dependencies: { next: '15', vinext: '0.5', vite: '5' } },
+          configFiles: new Set(['next.config.mjs']),
+        }),
+      ).framework,
+    ).toBe(Framework.NEXT);
   });
   it('detects SvelteKit from the @sveltejs/kit dep (even though it ships vite)', () => {
     expect(
